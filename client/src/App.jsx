@@ -10,6 +10,7 @@ import StateDetail from "./pages/StateDetail.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import Visited from "./pages/Visited.jsx";
+import Trip from "./pages/Trip.jsx";
 
 
 export default function App() {
@@ -21,7 +22,8 @@ export default function App() {
         <nav className="nav">
           <Link to="/">Home</Link>
           <Link to="/states">States</Link>
-          {user && <Link to="/visited">Visited</Link>} 
+          {user && <Link to="/visited">Visited</Link>}
+          {user && <Link to="/trip">Trips</Link>}
           {!user && <Link to="/login">Login</Link>}
           {!user && <Link to="/register">Register</Link>}
           {user && <Link to="/account">Account</Link>}
@@ -93,7 +95,20 @@ export default function App() {
            <ProtectedRoute>
           <Visited />
           </ProtectedRoute>}/>
-          </Routes>
+
+          <Route 
+          path="/trip" 
+          element={<ProtectedRoute><Trip/>
+          </ProtectedRoute>} />
+
+          <Route
+          path="/trip"
+          element={
+           <ProtectedRoute>
+          <Trip />
+          </ProtectedRoute>}/>
+          
+        </Routes>
       </main>
     </>
   );

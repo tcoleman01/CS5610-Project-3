@@ -7,10 +7,30 @@ import TripAccordion from "../components/trips/TripAccordion.jsx";
 export default function Trip() {
     const [showTripForm, setShowTripForm] = useState(false);
     const [trips, setTrips] = useState([]);
+    const userId = "testUserId"; // Replace with actual user ID from auth context
 
-    const handleAddTrip = (newTrip) => {
-        setTrips((prev) => [...prev, {id: prev.length + 1, ...newTrip }]);
-        setShowTripForm(false);
+    // const handleAddTrip = (newTrip) => {
+    //     setTrips((prev) => [...prev, {id: prev.length + 1, ...newTrip }]);
+    //     setShowTripForm(false);
+    // };
+
+    const handleAddTrip = async (newTrip) => {
+        try {
+            const response = await fetch(`/api/trips/userId/${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newTrip),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to add trip");
+            }
+            const savedTrip = await response.json();
+            setTrips((prev) => [...prev, savedTrip]);
+        } catch (error) {
+            console.error("Error adding trip:", error);
+        }
     };
 
     return (

@@ -150,14 +150,10 @@ app.patch("/users/me", authRequired, async (req, res) => {
   const uid = req.auth.uid;
   console.log("[PATCH /users/me] uid:", uid, "body:", req.body);
 
-  // Load current user; DO NOT log them out here—let's be forgiving
   const current = await users.findOne({ _id: new ObjectId(uid) });
   if (!current) {
-    // Keep cookie; ask client to re-auth without auto-logout thrash
     console.warn("[PATCH /users/me] No current user for uid:", uid);
-    return res
-      .status(401)
-      .json({ message: "Session expired. Please sign in again." });
+    return res.status(401).json({ message: "Session expired. Please sign in again." });
   }
 
   // Build minimal patch
@@ -169,17 +165,13 @@ app.patch("/users/me", authRequired, async (req, res) => {
   if (typeof req.body?.email === "string") {
     const newEmail = req.body.email.trim().toLowerCase();
     if (newEmail && newEmail !== current.email) {
-      const clash = await users.findOne({
-        email: newEmail,
-        _id: { $ne: current._id },
-      });
-      if (clash)
-        return res.status(409).json({ message: "Email already in use" });
+      const clash = await users.findOne({ email: newEmail, _id: { $ne: current._id } });
+      if (clash) return res.status(409).json({ message: "Email already in use" });
       patch.email = newEmail;
     }
   }
 
-  // Nothing to change → return current (no logout, no error)
+  // Nothing to change → return current
   if (!Object.keys(patch).length) {
     console.log("[PATCH /users/me] No-op update");
     return res.json({ user: safeUser(current) });
@@ -187,29 +179,26 @@ app.patch("/users/me", authRequired, async (req, res) => {
 
   patch.updatedAt = new Date();
 
+  // NOTE: In MongoDB Node Driver v6+, findOneAndUpdate returns the document directly.
+  // In older drivers, it returned { ok, value }. Handle both:
   const result = await users.findOneAndUpdate(
     { _id: current._id },
     { $set: patch },
     { returnDocument: "after", projection: { pass: 0 } }
   );
 
-  const updated = result?.value;
+  const updated = result && (result.value !== undefined ? result.value : result); // v4 vs v6 compatibility
+
   if (!updated) {
-    // Edge case: update matched nothing. Do NOT clear cookie; just ask to re-auth.
     console.warn("[PATCH /users/me] Update returned null for uid:", uid);
-    return res
-      .status(401)
-      .json({ message: "Session expired. Please sign in again." });
+    return res.status(401).json({ message: "Session expired. Please sign in again." });
   }
 
-  // If email changed, rotate cookie BEFORE sending the body
+  // If email changed, rotate cookie BEFORE sending body
   if (patch.email) {
     const token = sign({ uid, email: updated.email });
     res.cookie("token", token, cookieOpts);
-    console.log(
-      "[PATCH /users/me] Rotated cookie for email change:",
-      updated.email
-    );
+    console.log("[PATCH /users/me] Rotated cookie for email change:", updated.email);
   }
 
   return res.json({ user: safeUser(updated) });

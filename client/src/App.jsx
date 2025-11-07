@@ -21,6 +21,7 @@ export default function App() {
         <nav className="nav">
           <Link to="/">Home</Link>
           <Link to="/states">States</Link>
+          {user && <Link to="/visited">Visited</Link>} 
           {!user && <Link to="/login">Login</Link>}
           {!user && <Link to="/register">Register</Link>}
           {user && <Link to="/account">Account</Link>}

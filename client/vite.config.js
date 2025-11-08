@@ -8,8 +8,9 @@ export default defineConfig({
     host: "localhost", // keep cookies consistent (localhost everywhere)
     port: 5174,
     proxy: {
-      "/auth": { target: "http://localhost:4000", changeOrigin: false },
-      "/users": { target: "http://localhost:4000", changeOrigin: false },
-    },
+  "/auth": { target: "http://localhost:4000", changeOrigin: false },
+  "/users": { target: "http://localhost:4000", changeOrigin: false },
+  "/api":  { target: "http://localhost:3000", changeOrigin: false },
+},
   },
 });

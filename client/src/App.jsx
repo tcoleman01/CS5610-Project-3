@@ -28,16 +28,13 @@ export default function App() {
           {!user && <Link to="/register">Register</Link>}
           {user && <Link to="/account">Account</Link>}
           {user && (
-            <button onClick={logout} className="linklike">
-              Logout
-            </button>
+            <button onClick={logout} className="linklike">Logout</button>
           )}
         </nav>
       </header>
 
       <main className="container">
         <Routes>
-          {/* Home now renders the Home page component */}
           <Route path="/" element={<Home />} />
 
           <Route path="/login" element={<Login />} />
@@ -46,25 +43,19 @@ export default function App() {
           <Route
             path="/account"
             element={
-              <ProtectedRoute>
-                <Account />
-              </ProtectedRoute>
+              <ProtectedRoute><Account /></ProtectedRoute>
             }
           />
           <Route
             path="/account/edit"
             element={
-              <ProtectedRoute>
-                <AccountEdit />
-              </ProtectedRoute>
+              <ProtectedRoute><AccountEdit /></ProtectedRoute>
             }
           />
           <Route
             path="/account/delete"
             element={
-              <ProtectedRoute>
-                <AccountDelete />
-              </ProtectedRoute>
+              <ProtectedRoute><AccountDelete /></ProtectedRoute>
             }
           />
 
@@ -74,34 +65,13 @@ export default function App() {
           <Route
             path="/visited"
             element={
-              <ProtectedRoute>
-                <Visited />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/visited"
-            element={
-              <ProtectedRoute>
-                <Visited />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/trip"
-            element={
-              <ProtectedRoute>
-                <Trip />
-              </ProtectedRoute>
+              <ProtectedRoute><Visited /></ProtectedRoute>
             }
           />
           <Route
             path="/trip"
             element={
-              <ProtectedRoute>
-                <Trip />
-              </ProtectedRoute>
+              <ProtectedRoute><Trip /></ProtectedRoute>
             }
           />
         </Routes>

@@ -1,53 +1,50 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import HeroCard from "../components/HeroCard.jsx";
+import "../styles/Home.css";
 
 export default function Home() {
   const { user } = useAuth();
 
   return (
-    <section className="home">
-      <div className="home-hero">
-        <h1 className="home-title">Plan. Explore. Remember.</h1>
-        <p className="home-subtitle">
-          Track the states you’ve visited, map your next trip, and keep all your travel memories in one place.
-        </p>
-
-        <div className="home-cta">
-          <Link className="btn btn-lg primary" to="/states">Browse States</Link>
+    <div className="home">
+      <section className="home-hero">
+        <h1>Welcome to Travel Tracker</h1>
+        <p>Mark states you’ve visited, log trips, and watch your map light up.</p>
+        <div className="hero-actions" style={{ marginTop: 14 }}>
+          <Link className="btn primary" to="/states">Browse States</Link>
           {user ? (
             <>
-              <Link className="btn btn-lg" to="/visited">My Visited</Link>
-              <Link className="btn btn-lg" to="/trip">Plan a Trip</Link>
+              <Link className="btn" to="/visited">My Visited States</Link>
+              <Link className="btn" to="/trip">Manage Trips</Link>
             </>
           ) : (
             <>
-              <Link className="btn btn-lg" to="/register">Create Account</Link>
-              <Link className="btn btn-lg" to="/login">Sign In</Link>
+              <Link className="btn" to="/login">Log in</Link>
+              <Link className="btn" to="/register">Create account</Link>
             </>
           )}
         </div>
-      </div>
+      </section>
 
-      <div className="home-features">
-        <div className="feature-card">
-          <h3>Interactive Map</h3>
-          <p>Click any state to see highlights and add it to your travel history.</p>
-        </div>
-        <div className="feature-card">
-          <h3>Trip Builder</h3>
-          <p>Plan multi-city routes, dates, budgets, and notes—keep it all organized.</p>
-        </div>
-        <div className="feature-card">
-          <h3>Your Journal</h3>
-          <p>Add details and photos to remember the best parts of each trip.</p>
-        </div>
-      </div>
-
-      <div className="home-tip">
-        <span className="tip-badge">Tip</span>
-        <p>Already traveling? Head to <Link to="/trip">Trips</Link> to add stops and track expenses.</p>
-      </div>
-    </section>
+      <section className="hero-grid">
+        <HeroCard
+          title="Interactive US Map"
+          body="Click any state to see quick facts and add trips that include it."
+          action={<Link className="btn" to="/states">Open the map</Link>}
+        />
+        <HeroCard
+          title="Trip Logger"
+          body="Track dates, stops, costs, and notes. Edit or delete anytime."
+          action={<Link className="btn" to="/trip">Add a trip</Link>}
+        />
+        <HeroCard
+          title="Your Progress"
+          body="See how much of the US you've covered and your total trip costs."
+          action={<Link className="btn" to="/visited">View stats</Link>}
+        />
+      </section>
+    </div>
   );
 }

@@ -1,0 +1,44 @@
+.home-hero {
+  padding: 48px 24px;
+  background: linear-gradient(135deg, rgba(33,150,243,.2), rgba(76,175,80,.2));
+  border-radius: 16px;
+  margin-bottom: 28px;
+  border: 1px solid var(--border, #2b3142);
+}
+
+.home-hero h1 { font-size: 1.8rem; margin: 0 0 8px; }
+.home-hero p  { margin: 0; color: var(--muted, #9aa4bf); }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.hero-card {
+  background: var(--card, #121826);
+  border: 1px solid var(--border, #2b3142);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border, #2b3142);
+  background: var(--card, #0f1523);
+  text-decoration: none;
+}
+
+.btn.primary {
+  background: #2563eb;
+  color: white;
+  border-color: #1e40af;
+}

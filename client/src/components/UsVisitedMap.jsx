@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import * as d3geo from "d3-geo";
 import { feature as topoToGeo } from "topojson-client";
+import PropTypes from "prop-types";
 
 const GEO_URL = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 

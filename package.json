@@ -7,8 +7,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --watch backend.js",
-    "format": "prettier --write ",
-    "lint": "eslint ."
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "seed": "node scripts/seed.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,6 @@
   },
   "homepage": "https://github.com/salmeida1993/CS5610-Project-3#readme",
   "dependencies": {
-    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mongodb": "6.20",

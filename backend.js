@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { connect } from "./db/index.js";
 import tripsRouter from "./routes/trips.js";
 
@@ -8,29 +10,37 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ===== Minimal CORS headers, no 'cors' library =====
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "https://tcoleman01.github.io/CS5610-Project-3/";
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", FRONTEND_ORIGIN);
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-  if (req.method === "OPTIONS") return res.sendStatus(204);
+// DB
+const { db } = await connect();
+app.use((req, _res, next) => {
+  req.db = db;
   next();
 });
 
-// Connect once; keep db on req
-const { db } = await connect();
-app.use((req, _res, next) => { req.db = db; next(); });
-
-// health check for Render
-app.get("/health", (_req, res) => res.json({ ok: true }));
-
-// your routes
+// ---- API ROUTES (keep these BEFORE the static fallback) ----
 app.use("/api/trips", tripsRouter);
 
-// IMPORTANT: Render sets PORT for you
+// Optional: simple health check
+app.get("/health", (_req, res) => res.json({ ok: true }));
+
+// ---- Serve React build (client/dist) ----
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const CLIENT_DIST = path.join(__dirname, "client", "dist");
+
+// Serve static files
+app.use(express.static(CLIENT_DIST));
+
+// SPA fallback: send index.html for all non-API routes
+app.get("*", (req, res) => {
+  // avoid swallowing API paths
+  if (req.path.startsWith("/api")) {
+    return res.status(404).json({ error: "Not found" });
+  }
+  res.sendFile(path.join(CLIENT_DIST, "index.html"));
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Trips API running on http://localhost:${PORT}`);
+  console.log(`App running on http://localhost:${PORT}`);
 });

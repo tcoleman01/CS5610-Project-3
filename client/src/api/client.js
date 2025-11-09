@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || ""; // empty in dev/prod same-origin
+const API_BASE = import.meta.env.VITE_API_BASE || ""; // keep this exactly like this
 
 export async function api(path, { method = "GET", data } = {}) {
   const res = await fetch(`${API_BASE}${path}`, {

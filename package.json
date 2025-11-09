@@ -5,6 +5,8 @@
   "main": "backend.js",
   "type": "module",
   "scripts": {
+    "build": "npm --prefix client ci && npm --prefix client run build",
+    "render-start": "node backend.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --watch backend.js",
     "format": "prettier --write .",
